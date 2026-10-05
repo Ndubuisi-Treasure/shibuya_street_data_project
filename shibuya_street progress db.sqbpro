@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="shibuya_street.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="749"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="orders" custom_title="0" dock_id="1" table="4,6:mainorders"/><dock_state state="000000ff00000000fd00000001000000020000033b00000254fc0100000001fb000000160064006f0063006b00420072006f007700730065003101000000000000033b0000015c00ffffff0000033b0000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="orders" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="55"/><column index="2" value="85"/><column index="3" value="69"/><column index="4" value="55"/><column index="5" value="109"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">--Query 1:Shows all in products
+SELECT *
+FROM products;
+
+--Query 2:Shows all orders
+SELECT *
+FROM orders
+
+--Query 3:Show all the accessories category
+SELECT product_name,category
+FROM products
+WHERE category = &quot;Accessories&quot;;
+
+--Query 4:5 most expensive products by price 
+SELECT product_name,price
+FROM products
+GROUP BY price
+ORDER BY price DESC
+LIMIT 5 
+
+--Query 5:Revenue per product
+SELECT product_name, SUM(products.price* orders.quantity) AS revenue_per_product
+FROM orders
+JOIN products
+     ON products.product_id= orders.product_id
+GROUP BY product_name	 
+
+--Query 6:Revenue per category
+SELECT category, SUM(price*quantity) AS revenue_per_category
+FROM orders
+JOIN products
+  ON products.product_id= orders.product_id	 
+GROUP BY category
+
+--Query 7:Most selling product by total revenue
+SELECT product_name , SUM(price*quantity) AS total_revenue
+FROM orders
+JOIN products
+  ON products.product_id= orders.product_id
+GROUP BY product_name 
+ORDER BY total_revenue DESC
+LIMIT 5
+ 
+
+--Query 8:Best selling category by total_quantity
+SELECT category , SUM(quantity) AS total_quantity
+FROM orders
+JOIN products  
+  ON products.product_id= orders.product_id
+GROUP BY category 
+ORDER BY total_quantity DESC
+LIMIT 1
+
+--Query 9: Revenue by month
+SELECT strftime('%m',order_date) as month ,SUM(price*quantity) AS revenue
+FROM orders
+JOIN products
+   ON products.product_id=orders.product_id
+GROUP BY month
+ORDER BY month   
+
+--Query 10:Revenue by week
+SELECT strftime('%w',order_date) AS weeks,SUM(price*quantity) AS revenue
+FROM orders
+JOIN products
+  ON products.product_id=orders.product_id
+GROUP BY weeks  
+ORDER BY weeks
+
+/*Posters generated the most revenueM therefore restock and AD should focus more on it.*/
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
